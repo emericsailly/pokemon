@@ -9,11 +9,20 @@
     <link rel="icon" href="images/pokeball.png" />
   </head>
   <body>
-    <section id="search-section"></section>
+    <section id="search-section" class="scrollbar-hidden">
+      <div class="search-bar">
+        <input type="text" placeholder="Search a Pokemon !" />
+        <button id="search">
+          <img src="images/magnifyingGlass.png" />
+        </button>
+        <button id="delete-search">
+          <img src="images/cross.png" />
+        </button>
+      </div>
+    </section>
     <section id="pokemon-info">
       <header>
-        <img src="images/pokeball.png" height="300px" />
-        <h1 style="letter-spacing: 0">Click on any Pokemon !</h1>
+        <img src="images/pokeball.png" height="400px" />
       </header>
     </section>
     <script type="module" src="script.js"></script>

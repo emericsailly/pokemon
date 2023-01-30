@@ -56,8 +56,8 @@ async function populatePokemonInfo() {
     pokemonData["sprites"]["other"]["official-artwork"]["front_default"]
   }  />
                           <h1>${pokemonData.name}</h1>
-                          <h2>フシギダネ</h2>
-                          <h3>#${String(pokemonData.id).padStart(4, "0")}</h3>
+                          <!--<h2>フシギダネ</h2>-->
+                          <h2>#${String(pokemonData.id).padStart(4, "0")}</h2>
                           <div class="types">`;
   for (let index = 0; index < pokemonData.types.length; index++) {
     let type = pokemonData.types[index].type.name;
@@ -79,26 +79,27 @@ async function populateSearchBar() {
       let pokemonData = await getData(pokemon.url);
       let listEl = document.createElement("div");
       listEl.classList.add("list-item");
-      if (pokemonData.id > 10000) listEl.style.display = "none";
-      listEl.dataset.name = pokemonData.name;
-      listEl.dataset.id = pokemonData.id;
-      let imgsrc = pokemonData.sprites.front_default;
-      if (imgsrc === null) {
-        imgsrc =
-          pokemonData["sprites"]["other"]["official-artwork"]["front_default"];
-      }
-      listEl.innerHTML = `<img src=${imgsrc}  />
+      if (pokemonData.id < 10000) {
+        listEl.dataset.name = pokemonData.name;
+        listEl.dataset.id = pokemonData.id;
+        let imgsrc = pokemonData.sprites.front_default;
+        if (imgsrc === null) {
+          imgsrc =
+            pokemonData["sprites"]["other"]["official-artwork"][
+              "front_default"
+            ];
+        }
+        listEl.innerHTML = `<img src=${imgsrc}  />
                             <div class=infos>
                               <p class=number>#${String(
                                 pokemonData.id
                               ).padStart(4, "0")}</p>
                               <h3 class=name>${pokemonData.name}</h3>
                             </div>`;
-      listEl.addEventListener("click", populatePokemonInfo);
-      searchList.appendChild(listEl);
-      //console.log("appended #" + pokemonData.id);
+        listEl.addEventListener("click", populatePokemonInfo);
+        searchList.appendChild(listEl);
+      }
     });
-    //return;
     pokedex = await getData(pokedex.next);
   }
 }
@@ -106,3 +107,32 @@ async function populateSearchBar() {
 function sortSearchBar() {}
 
 populateSearchBar();
+
+document.querySelector("#search").addEventListener("click", searchPokemon);
+document
+  .querySelector(".search-bar input")
+  .addEventListener("keydown", (event) => {
+    if (event.keyCode === 13) searchPokemon();
+  });
+
+function searchPokemon() {
+  let searchedPokemon = document.querySelector(".search-bar input").value;
+  document.querySelectorAll(".search-list .list-item").forEach((item) => {
+    if (!item.dataset.name.includes(searchedPokemon)) {
+      item.style.display = "none";
+    } else {
+      item.style.display = "flex";
+    }
+  });
+}
+
+document
+  .querySelector("#delete-search")
+  .addEventListener("click", deleteSearchPokemon);
+
+function deleteSearchPokemon() {
+  document.querySelector(".search-bar input").value = "";
+  document.querySelectorAll(".search-list .list-item").forEach((item) => {
+    item.style.display = "flex";
+  });
+}
